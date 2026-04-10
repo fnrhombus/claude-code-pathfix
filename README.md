@@ -83,6 +83,13 @@ Add this to your Claude Code settings (`~/.claude/settings.json`):
 
 That's it. One step. `npx` downloads and caches the package automatically on first run — no global install needed.
 
+Or, have Claude Code configure itself:
+
+```bash
+claude -p --allowedTools "Edit(~/.claude/settings.json)" \
+  "Add a PreToolUse hook to your user settings.json: matcher 'Bash', type 'command', command 'npx -y claude-code-pathfix'"
+```
+
 ## What it converts
 
 | Input | Output |
