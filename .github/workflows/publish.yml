@@ -17,10 +17,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Ensure npm supports OIDC
-        run: npm install -g npm@latest
 
       - name: Check if version is already published
         id: check
@@ -34,4 +30,4 @@ jobs:
 
       - name: Publish
         if: steps.check.outputs.skip == 'false'
-        run: npm publish --provenance --access public
+        run: npx -y npm@latest publish --provenance --access public
