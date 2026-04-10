@@ -95,10 +95,16 @@ That's it. One step. `npx` downloads and caches the package automatically on fir
 ### What it doesn't touch
 
 - Paths that are already POSIX (`/d/Users/Tom/...`)
-- Relative paths (`../src/file.ts`)
+- Relative paths with backslashes (`src\file.ts`) — see tip below
 - URLs (`https://example.com`)
 - Escape sequences (`\n`, `\t`)
 - Non-path backslash usage (`grep 'foo\|bar'`)
+
+> **Tip:** This hook can only reliably detect Windows paths that start with a drive letter (`C:\...`). Relative paths with backslashes (`src\components\App.tsx`) are ambiguous in bash and can't be safely distinguished from escape sequences. To get the most out of this hook, add the following to your project's `CLAUDE.md`:
+>
+> ```
+> Always use absolute paths in shell commands.
+> ```
 
 ## Cross-platform safe
 
