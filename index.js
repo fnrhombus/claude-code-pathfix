@@ -19,6 +19,9 @@ process.stdin.on('end', () => {
     const command = data.tool_input?.command;
     if (!command) return;
 
+    // Skip if the command looks like PowerShell (user may have switched shells)
+    if (/\b(Get-|Set-|New-|Remove-|Invoke-|Select-|Where-Object|ForEach-Object|\$PSVersionTable|\$env:)/i.test(command)) return;
+
     const fixed = fixWindowsPaths(command);
 
     if (fixed === command) return;
