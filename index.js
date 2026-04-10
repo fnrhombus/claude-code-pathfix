@@ -19,6 +19,18 @@ process.stdin.on('end', () => {
     const command = data.tool_input?.command;
     if (!command) return;
 
+    // Escape prefix: skip path fixing but strip the prefix so the command still runs
+    const ESCAPE = '⟪!⟫';
+    if (command.startsWith(ESCAPE)) {
+      process.stdout.write(JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: 'PreToolUse',
+          updatedInput: { ...data.tool_input, command: command.slice(ESCAPE.length) },
+        },
+      }));
+      return;
+    }
+
     // Skip if the command looks like PowerShell (user may have switched shells)
     if (/\b(Get-|Set-|New-|Remove-|Invoke-|Select-|Where-Object|ForEach-Object|\$PSVersionTable|\$env:)/i.test(command)) return;
 

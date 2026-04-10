@@ -113,6 +113,16 @@ claude -p --allowedTools "Edit(~/.claude/settings.json)" \
 > Always use absolute paths in shell commands.
 > ```
 
+## Escape hatch
+
+If a specific command needs its Windows paths left alone (e.g., passing a path to a Windows-native tool), prefix it with `⟪!⟫`:
+
+```bash
+⟪!⟫somecommand C:\Users\Tom\file.txt
+```
+
+The prefix is stripped before execution — the command runs as `somecommand C:\Users\Tom\file.txt` with no path conversion. No restart or settings change needed.
+
 ## Cross-platform safe
 
 **If your Claude Code settings are symlinked across Windows and WSL** (a common setup), `claude-code-pathfix` detects the platform at startup and silently exits on non-Windows systems. It will never interfere with native Linux or macOS Bash commands.
