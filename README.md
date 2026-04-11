@@ -61,6 +61,19 @@ The key difference: blocking still costs a round-trip. Claude sees the error, th
 
 ## Install
 
+### Option 1: Claude Code plugin (recommended)
+
+Inside Claude Code, run:
+
+```
+/plugin marketplace add fnrhombus/claude-code-pathfix
+/plugin install claude-code-pathfix@fnrhombus-plugins
+```
+
+Done. The hook is registered automatically — no `settings.json` edits required. Uninstall with `/plugin uninstall claude-code-pathfix@fnrhombus-plugins`.
+
+### Option 2: npm + settings.json
+
 Add this to your Claude Code settings (`~/.claude/settings.json`):
 
 ```jsonc
@@ -81,7 +94,7 @@ Add this to your Claude Code settings (`~/.claude/settings.json`):
 }
 ```
 
-That's it. One step. `npx` downloads and caches the package automatically on first run — no global install needed.
+`npx` downloads and caches the package automatically on first run — no global install needed.
 
 Or, have Claude Code configure itself:
 
@@ -129,7 +142,7 @@ The prefix is stripped before execution — the command runs as `somecommand C:\
 
 ## Performance
 
-The hook is a single Node.js script with **zero dependencies**. It starts in under 10ms — compared to 200-500ms for hooks that spawn a Bash subshell ([#34457](https://github.com/anthropics/claude-code/issues/34457)). You won't notice it's there.
+The hook is a tiny Node.js script built on [`@fnrhombus/claude-code-hooks`](https://github.com/fnrhombus/claude-code-hooks), a strongly-typed wrapper for the Claude Code hook API. It starts in under 20ms — compared to 200-500ms for hooks that spawn a Bash subshell ([#34457](https://github.com/anthropics/claude-code/issues/34457)). You won't notice it's there.
 
 ## How it works
 
@@ -144,7 +157,7 @@ The hook is a single Node.js script with **zero dependencies**. It starts in und
 ## Requirements
 
 - **Claude Code** v2.0.10+ (for `updatedInput` hook support)
-- **Node.js** 14+ (any version that ships with Claude Code works)
+- **Node.js** 20+
 - **Windows** with Git Bash or MSYS2
 
 ## Support
