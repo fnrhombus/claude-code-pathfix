@@ -52,4 +52,6 @@ jobs:
 
       - name: Publish
         if: steps.check.outputs.skip == 'false'
-        run: npm publish --provenance --access public
+        # Use latest npm (node 20's bundled npm doesn't fully support OIDC
+        # trusted publishing without NODE_AUTH_TOKEN; newer npm does).
+        run: npx -y npm@latest publish --provenance --access public
