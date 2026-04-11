@@ -47,7 +47,7 @@ runHook({
  *   "C:\Program Files\Git\bin"   →  "/c/Program Files/Git/bin"
  *   C:\repo\src\index.ts         →  /c/repo/src/index.ts
  */
-export function fixWindowsPaths(command: string): string {
+function fixWindowsPaths(command: string): string {
   // Pass 1: paths inside double quotes (may contain spaces)
   let result = command.replace(
     /"([A-Za-z]):((?:\\[^"*?<>|\n\r]+?)+\\?)"/g,
