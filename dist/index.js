@@ -27,9 +27,9 @@ var POWERSHELL_RE = /\b(Get-|Set-|New-|Remove-|Invoke-|Select-|Where-Object|ForE
 function fixWindowsPaths(command) {
   return command.replace(
     /"([A-Za-z]):((?:\\[^"*?<>|\n\r]+?)+\\?)"/g,
-    (_, drive, tail) => '"/' + drive.toLowerCase() + tail.replace(/\\/g, "/") + '"'
+    (_, drive, tail) => `"/${drive.toLowerCase()}${tail.replace(/\\/g, "/")}"`
   ).replace(
     /(?<![/\w])([A-Za-z]):((?:\\[^\s\\*?"<>|]+)+\\?)/g,
-    (_, drive, tail) => "/" + drive.toLowerCase() + tail.replace(/\\/g, "/")
+    (_, drive, tail) => `/${drive.toLowerCase()}${tail.replace(/\\/g, "/")}`
   );
 }

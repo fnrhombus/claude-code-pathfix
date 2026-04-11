@@ -53,12 +53,12 @@ function fixWindowsPaths(command: string): string {
     .replace(
       /"([A-Za-z]):((?:\\[^"*?<>|\n\r]+?)+\\?)"/g,
       (_, drive: string, tail: string) =>
-        '"/' + drive.toLowerCase() + tail.replace(/\\/g, "/") + '"',
+        `"/${drive.toLowerCase()}${tail.replace(/\\/g, "/")}"`,
     )
     // Pass 2: unquoted paths (no spaces).
     .replace(
       /(?<![/\w])([A-Za-z]):((?:\\[^\s\\*?"<>|]+)+\\?)/g,
       (_, drive: string, tail: string) =>
-        "/" + drive.toLowerCase() + tail.replace(/\\/g, "/"),
+        `/${drive.toLowerCase()}${tail.replace(/\\/g, "/")}`,
     );
 }
