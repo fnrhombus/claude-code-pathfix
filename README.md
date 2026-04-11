@@ -147,6 +147,15 @@ The hook is a single Node.js script with **zero dependencies**. It starts in und
 - **Node.js** 14+ (any version that ships with Claude Code works)
 - **Windows** with Git Bash or MSYS2
 
+## Support
+
+If you find this project useful, consider supporting its development:
+
+- **[GitHub Sponsors](https://github.com/sponsors/fnrhombus)** — Monthly sponsorship with public recognition
+- **[Buy Me a Coffee](https://buymeacoffee.com/fnrhombus)** — One-time or recurring donations
+
+Your support helps maintain and improve this project!
+
 ## License
 
 MIT
