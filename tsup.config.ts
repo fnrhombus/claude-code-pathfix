@@ -7,10 +7,16 @@ export default defineConfig({
   target: "node20",
   clean: true,
   sourcemap: false,
-  // Keep the shebang in src/index.ts as-is on the first line of dist/index.cjs.
-  // tsup handles this automatically when the source starts with `#!/usr/bin/env node`.
   dts: false,
-  minify: false,
-  // Do NOT bundle @fnrhombus/claude-code-hooks — it's a real dep, loaded at runtime.
-  external: ["@fnrhombus/claude-code-hooks"],
+  // Bundle everything — pathfix is a bin script, not a library. One
+  // self-contained dist/index.js means faster install (one tarball),
+  // faster startup (no cross-package module resolution on every Bash
+  // command), and no runtime dep graph for users.
+  noExternal: [/.*/],
+  // Parsing smaller code is a real startup win for a per-command hook.
+  // esbuild minify is fast and non-destructive — just name mangling and
+  // whitespace removal, no inlining or dead-code-with-side-effects risk.
+  minify: true,
+  // Keep the shebang in src/index.ts as-is on the first line of
+  // dist/index.js — tsup preserves it automatically.
 });

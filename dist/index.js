@@ -1,35 +1,4 @@
 #!/usr/bin/env node
-"use strict";
-
-// src/index.ts
-var import_claude_code_hooks = require("@fnrhombus/claude-code-hooks");
-if (process.platform !== "win32") process.exit(0);
-var ESCAPE = "\u27EA!\u27EB";
-var POWERSHELL_RE = /\b(Get-|Set-|New-|Remove-|Invoke-|Select-|Where-Object|ForEach-Object|\$PSVersionTable|\$env:)/i;
-(0, import_claude_code_hooks.runHook)({
-  preToolUse: {
-    Bash: ({ tool_input }) => {
-      const command = tool_input.command;
-      if (!command) return;
-      if (command.startsWith(ESCAPE)) {
-        return (0, import_claude_code_hooks.updateInput)({
-          ...tool_input,
-          command: command.slice(ESCAPE.length)
-        });
-      }
-      if (POWERSHELL_RE.test(command)) return;
-      const fixed = fixWindowsPaths(command);
-      if (fixed === command) return;
-      return (0, import_claude_code_hooks.updateInput)({ ...tool_input, command: fixed });
-    }
-  }
-});
-function fixWindowsPaths(command) {
-  return command.replace(
-    /"([A-Za-z]):((?:\\[^"*?<>|\n\r]+?)+\\?)"/g,
-    (_, drive, tail) => `"/${drive.toLowerCase()}${tail.replace(/\\/g, "/")}"`
-  ).replace(
-    /(?<![/\w])([A-Za-z]):((?:\\[^\s\\*?"<>|]+)+\\?)/g,
-    (_, drive, tail) => `/${drive.toLowerCase()}${tail.replace(/\\/g, "/")}`
-  );
-}
+"use strict";var k=class extends Error{constructor(t){super(t),this.name="HookBlock"}};async function p(t,e={}){let o=e.stdin??process.stdin,a=e.stdout??process.stdout,c=e.stderr??process.stderr,u=e.exit??(r=>{process.exit(r)}),d;try{let r=await v(o);d=JSON.parse(r)}catch(r){c.write(`claude-code-hooks: failed to parse stdin as JSON: ${String(r)}
+`),u(1);return}let m;try{m=await C(t,d)}catch(r){if(r instanceof k){c.write(r.message),u(2);return}c.write(`claude-code-hooks: handler threw: ${r instanceof Error?r.stack??r.message:String(r)}
+`),u(1);return}m!==void 0&&a.write(JSON.stringify(m)),u(0)}async function C(t,e){switch(e.hook_event_name){case"SessionStart":return i("SessionStart",await s(t.sessionStart,e),n(["additionalContext","sessionTitle"]));case"SessionEnd":return i("SessionEnd",await s(t.sessionEnd,e));case"UserPromptSubmit":{let o=await s(t.userPromptSubmit,e);return l("UserPromptSubmit",o,n(["additionalContext","sessionTitle"]))}case"PreToolUse":{let o=f(t.preToolUse,e.tool_name),a=await s(o,e);return i("PreToolUse",a,n(["permissionDecision","permissionDecisionReason","updatedInput","additionalContext"]))}case"PermissionRequest":{let o=f(t.permissionRequest,e.tool_name),a=await s(o,e);return i("PermissionRequest",a,n(["decision"]))}case"PermissionDenied":{let o=f(t.permissionDenied,e.tool_name),a=await s(o,e);return i("PermissionDenied",a,n(["retry"]))}case"PostToolUse":{let o=f(t.postToolUse,e.tool_name),a=await s(o,e);return l("PostToolUse",a,n(["additionalContext","updatedMCPToolOutput"]))}case"PostToolUseFailure":{let o=f(t.postToolUseFailure,e.tool_name),a=await s(o,e);return l("PostToolUseFailure",a,n(["additionalContext"]))}case"Notification":return i("Notification",await s(t.notification,e),n(["additionalContext"]));case"SubagentStart":return i("SubagentStart",await s(t.subagentStart,e),n(["additionalContext"]));case"SubagentStop":return l("SubagentStop",await s(t.subagentStop,e));case"TaskCreated":return i("TaskCreated",await s(t.taskCreated,e));case"TaskCompleted":return i("TaskCompleted",await s(t.taskCompleted,e));case"Stop":return l("Stop",await s(t.stop,e));case"StopFailure":return i("StopFailure",await s(t.stopFailure,e));case"TeammateIdle":return i("TeammateIdle",await s(t.teammateIdle,e));case"InstructionsLoaded":return i("InstructionsLoaded",await s(t.instructionsLoaded,e));case"ConfigChange":return l("ConfigChange",await s(t.configChange,e));case"CwdChanged":return i("CwdChanged",await s(t.cwdChanged,e));case"FileChanged":return i("FileChanged",await s(t.fileChanged,e));case"WorktreeCreate":{let o=await s(t.worktreeCreate,e);return i("WorktreeCreate",o,n(["worktreePath"]))}case"WorktreeRemove":return i("WorktreeRemove",await s(t.worktreeRemove,e));case"PreCompact":return i("PreCompact",await s(t.preCompact,e));case"PostCompact":return i("PostCompact",await s(t.postCompact,e));case"Elicitation":return i("Elicitation",await s(t.elicitation,e),n(["action","content"]));case"ElicitationResult":return i("ElicitationResult",await s(t.elicitationResult,e),n(["action","content"]))}}var S=["continue","stopReason","suppressOutput","systemMessage"];async function s(t,e){return t?await t(e)??void 0:void 0}function f(t,e){if(!t)return;if(typeof t=="function")return t;let o=t;return o[e]??o.default}function n(t){return e=>{let o={};for(let a of t)e[a]!==void 0&&(o[a]=e[a]);return o}}function i(t,e,o){if(e===void 0)return;let a=e,c={};for(let u of S){let d=a[u];d!==void 0&&(c[u]=d)}if(o){let u=o(a);if(Object.keys(u).length>0){let d={hookEventName:t,...u};c.hookSpecificOutput=d}}return c}function l(t,e,o){if(e===void 0)return;let a=e,c=i(t,e,o)??{};return typeof a.block=="string"&&(c.decision="block",c.reason=a.block),c}async function v(t){typeof t.setEncoding=="function"&&t.setEncoding("utf8");let e="";for await(let o of t)e+=typeof o=="string"?o:o.toString("utf8");return e}var w=(t,e)=>({permissionDecision:"allow",updatedInput:t,...e!==void 0?{permissionDecisionReason:e}:{}});process.platform!=="win32"&&process.exit(0);var g="\u27EA!\u27EB",P=/\b(Get-|Set-|New-|Remove-|Invoke-|Select-|Where-Object|ForEach-Object|\$PSVersionTable|\$env:)/i;p({preToolUse:{Bash:({tool_input:t})=>{let e=t.command;if(!e)return;if(e.startsWith(g))return w({...t,command:e.slice(g.length)});if(P.test(e))return;let o=T(e);if(o!==e)return w({...t,command:o})}}});function T(t){return t.replace(/"([A-Za-z]):((?:\\[^"*?<>|\n\r]+?)+\\?)"/g,(e,o,a)=>`"/${o.toLowerCase()}${a.replace(/\\/g,"/")}"`).replace(/(?<![/\w])([A-Za-z]):((?:\\[^\s\\*?"<>|]+)+\\?)/g,(e,o,a)=>`/${o.toLowerCase()}${a.replace(/\\/g,"/")}`)}
