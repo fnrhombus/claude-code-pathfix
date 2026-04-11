@@ -1,0 +1,22 @@
+name: Dependabot auto-merge
+
+# Completes the hands-off upgrade chain:
+#   dependabot PR → CI green → this workflow enables auto-merge →
+#   merge to main → publish.yml picks up new version → npm release.
+
+on: pull_request
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Enable auto-merge
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

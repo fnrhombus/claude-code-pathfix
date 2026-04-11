@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 5
+    # Group routine dev-dep bumps together to reduce PR churn, but let
+    # @fnrhombus/claude-code-hooks flow as a standalone PR so each wrapper
+    # update becomes its own auditable release trigger for pathfix.
+    groups:
+      dev-deps:
+        dependency-type: development
+        exclude-patterns:
+          - "@fnrhombus/claude-code-hooks"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
