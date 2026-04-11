@@ -48,19 +48,17 @@ runHook({
  *   C:\repo\src\index.ts         →  /c/repo/src/index.ts
  */
 function fixWindowsPaths(command: string): string {
-  // Pass 1: paths inside double quotes (may contain spaces)
-  let result = command.replace(
-    /"([A-Za-z]):((?:\\[^"*?<>|\n\r]+?)+\\?)"/g,
-    (_, drive: string, tail: string) =>
-      '"/' + drive.toLowerCase() + tail.replace(/\\/g, "/") + '"',
-  );
-
-  // Pass 2: unquoted paths (no spaces)
-  result = result.replace(
-    /(?<![/\w])([A-Za-z]):((?:\\[^\s\\*?"<>|]+)+\\?)/g,
-    (_, drive: string, tail: string) =>
-      "/" + drive.toLowerCase() + tail.replace(/\\/g, "/"),
-  );
-
-  return result;
+  return command
+    // Pass 1: paths inside double quotes (may contain spaces).
+    .replace(
+      /"([A-Za-z]):((?:\\[^"*?<>|\n\r]+?)+\\?)"/g,
+      (_, drive: string, tail: string) =>
+        '"/' + drive.toLowerCase() + tail.replace(/\\/g, "/") + '"',
+    )
+    // Pass 2: unquoted paths (no spaces).
+    .replace(
+      /(?<![/\w])([A-Za-z]):((?:\\[^\s\\*?"<>|]+)+\\?)/g,
+      (_, drive: string, tail: string) =>
+        "/" + drive.toLowerCase() + tail.replace(/\\/g, "/"),
+    );
 }
