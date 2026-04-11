@@ -1,13 +1,13 @@
 {
   "name": "claude-code-pathfix",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Claude Code hook that transparently converts Windows paths to POSIX in Bash commands — eliminating retry loops and saving tokens",
-  "main": "index.js",
+  "main": "dist/index.js",
   "bin": {
-    "claude-code-pathfix": "./index.js"
+    "claude-code-pathfix": "./dist/index.js"
   },
   "files": [
-    "index.js"
+    "dist"
   ],
   "keywords": [
     "claude-code",
@@ -34,7 +34,20 @@
     "url": "https://github.com/fnrhombus/claude-code-pathfix/issues"
   },
   "homepage": "https://github.com/fnrhombus/claude-code-pathfix#readme",
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@fnrhombus/claude-code-hooks": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=20.0.0"
   }
 }
