@@ -66,11 +66,13 @@ The key difference: blocking still costs a round-trip. Claude sees the error, th
 Inside Claude Code, run:
 
 ```
-/plugin marketplace add fnrhombus/claude-code-pathfix
+/plugin marketplace add fnrhombus/claude-plugins
 /plugin install claude-code-pathfix@fnrhombus-plugins
 ```
 
 Done. The hook is registered automatically — no `settings.json` edits required. Uninstall with `/plugin uninstall claude-code-pathfix@fnrhombus-plugins`.
+
+> The marketplace at [`fnrhombus/claude-plugins`](https://github.com/fnrhombus/claude-plugins) auto-discovers every `fnrhombus` plugin tagged with the `claude-code-plugin` topic, so adding it once gives you access to all of them.
 
 ### Option 2: npm + settings.json
 
