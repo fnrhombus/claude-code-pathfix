@@ -33,12 +33,32 @@ jobs:
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          OUT=$(printf '%s' '{"session_id":"s","transcript_path":"/t","cwd":"/c","hook_event_name":"PreToolUse","permission_mode":"default","tool_use_id":"tu","tool_name":"Bash","tool_input":{"command":"ls D:\\\\Users\\\\Tom\\\\file.txt"}}' | node dist/index.js)
+          OUT=$(node -e "
+            const input = JSON.stringify({
+              session_id:'s', transcript_path:'/t', cwd:'/c',
+              hook_event_name:'PreToolUse', permission_mode:'default',
+              tool_use_id:'tu', tool_name:'Bash',
+              tool_input:{command:'ls D:\\\\Users\\\\Tom\\\\file.txt'}
+            });
+            const {execSync} = require('child_process');
+            const result = execSync('node dist/index.js', {input, encoding:'utf8'});
+            process.stdout.write(result);
+          ")
           echo "Output: $OUT"
           echo "$OUT" | grep -q '/d/Users/Tom/file.txt' || exit 1
 
       - name: Smoke test — non-Bash no-op
         shell: bash
         run: |
-          OUT=$(printf '%s' '{"session_id":"s","transcript_path":"/t","cwd":"/c","hook_event_name":"PreToolUse","permission_mode":"default","tool_use_id":"tu","tool_name":"Edit","tool_input":{"file_path":"/a","old_string":"x","new_string":"y"}}' | node dist/index.js)
+          OUT=$(node -e "
+            const input = JSON.stringify({
+              session_id:'s', transcript_path:'/t', cwd:'/c',
+              hook_event_name:'PreToolUse', permission_mode:'default',
+              tool_use_id:'tu', tool_name:'Edit',
+              tool_input:{file_path:'/a', old_string:'x', new_string:'y'}
+            });
+            const {execSync} = require('child_process');
+            const result = execSync('node dist/index.js', {input, encoding:'utf8'});
+            process.stdout.write(result);
+          ")
           [ -z "$OUT" ] || { echo "Expected empty output, got: $OUT"; exit 1; }
