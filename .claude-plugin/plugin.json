@@ -1,12 +1,11 @@
 {
   "name": "claude-code-pathfix",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Claude Code hook that transparently converts Windows paths to POSIX in Bash commands — eliminating retry loops and saving tokens",
   "author": {
     "name": "fnrhombus"
   },
   "homepage": "https://github.com/fnrhombus/claude-code-pathfix",
   "repository": "https://github.com/fnrhombus/claude-code-pathfix",
-  "license": "MIT",
-  "hooks": "./hooks/hooks.json"
+  "license": "MIT"
 }

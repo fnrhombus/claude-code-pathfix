@@ -1,6 +1,6 @@
 {
   "name": "claude-code-pathfix",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Claude Code hook that transparently converts Windows paths to POSIX in Bash commands — eliminating retry loops and saving tokens",
   "main": "dist/index.js",
   "bin": {
